@@ -64,6 +64,8 @@
     outline-offset: -2px;
   }
 
+  html { scroll-behavior: smooth; }
+
   body {
     font-family: 'PT Serif', serif;
     background: var(--bg);
@@ -204,7 +206,7 @@
   body[data-filter="culture"]   #classical { display: none; }
 
   /* ── Category band (full-bleed) ───────────────────────────────── */
-  .cat-band { padding: 3.5rem 1.5rem 3.75rem; }
+  .cat-band { padding: 3.5rem 1.5rem 3.75rem; scroll-margin-top: 72px; }
   .cat-photo {
     display: block;
     width: calc(100% + 3rem);
