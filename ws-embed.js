@@ -1,6 +1,7 @@
 // ws-embed.js — Shoonya style page embed
 // Served from: https://classes.shoonyadance.com/ws-embed.js
-// v2 · 2026-06-09 — added drop-in pack section (Pilates, Dance & Fit, Wed Yoga)
+// v3 · 2026-06-09 — drop-in packs moved to the Block Studio levels block (not the
+//                   embed); Yoga "also" card now reads "Tue & Wed · Open"
 //
 // Usage — replace the Practical code block on any style page with:
 //   <div id="ws-prac-root"></div>
@@ -389,7 +390,8 @@
       '</div>' +
       buildShoeGuide(data.shoeGuide) +
       buildPartnerStrip(data.partner) +
-      buildDropinPacks(data.dropinPacks) +
+      // Drop-in packs now live in the Block Studio levels block (per-day cards),
+      // NOT here — rendering them in the embed too would duplicate them on the page.
       '<p class="sec-label">Also at Shoonya</p>' +
       '<h2 class="section-h">You might also like</h2>' +
       '<div class="also-grid">' + cards + '</div>' +
