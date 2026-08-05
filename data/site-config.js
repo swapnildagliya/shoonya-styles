@@ -10,8 +10,11 @@
     schoolYearWide: '2026 — 2027',
     semesterNumber: 1,
     counts: {
-      styles: 24, teachers: 22, studios: 5,
-      partner_social: 7, classical_technique: 7, culture_wellness: 10
+      // 2026-08-02: +Contemporary dance (style #25, Tono Ferriol) → classical 7→8.
+      // `teachers` left at 22 on purpose — could not verify whether Tono was
+      // already counted when he joined in June. Check before trusting it.
+      styles: 25, teachers: 22, studios: 5,
+      partner_social: 7, classical_technique: 8, culture_wellness: 10
     },
     semester: {
       start: '2026-09-14',

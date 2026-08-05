@@ -333,6 +333,10 @@
     font-size: 17px;
     line-height: 1;
   }
+  /* Multi-day badges carry 2–3 day abbreviations ("M/Th", "M/W/Th"), which
+     overflow the 48px circle at the single-letter size. Step them down. */
+  .strip-day.is-multi  { font-size: 12px; letter-spacing: -.02em; }
+  .strip-day.is-multi3 { font-size: 10px; letter-spacing: -.03em; }
   .cat-partner   .strip-day { background: var(--purple);      color: #fff; }
   .cat-classical .strip-day { background: var(--salmon-deep); color: #fff; }
   .cat-culture   .strip-day { background: #000000;            color: var(--yellow); }
@@ -353,6 +357,7 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+  .strip-meta + .strip-meta { margin-top: .12rem; }
   .cat-partner   .strip-meta { color: var(--purple-deep); }
   .cat-classical .strip-meta { color: var(--salmon-ink);  }
   .cat-culture   .strip-meta { color: var(--yellow-ink);  }
@@ -440,6 +445,8 @@
     .cat-band  { padding: 2.5rem 1rem 2.75rem; }
     .strip     { padding: 14px 16px; gap: 12px; }
     .strip-day { flex: 0 0 42px; height: 42px; font-size: 15px; }
+    .strip-day.is-multi  { font-size: 11px; }
+    .strip-day.is-multi3 { font-size: 9px; }
     .strip-body h3 { font-size: 1.05rem; }
     .strip-meta    { font-size: .72rem; }
     .footer-wrap   { padding: 3rem 1rem 4rem; }
@@ -452,8 +459,8 @@
     {
       "@type": "ItemList",
       "name": "Dance Styles at Shoonya Dance Centre Ghent",
-      "description": "All 24 dance styles taught at Shoonya Dance Centre in Ghent, Belgium — from Argentine Tango and Ballet to Bollywood, Bhangra, and Burlesque.",
-      "numberOfItems": 24,
+      "description": "All 25 dance styles taught at Shoonya Dance Centre in Ghent, Belgium — from Argentine Tango and Ballet to Bollywood, Bhangra, and Burlesque.",
+      "numberOfItems": 25,
       "url": "https://styles.shoonyadance.com/",
       "itemListElement": [
         {
@@ -486,70 +493,74 @@
         },
         {
           "@type": "ListItem", "position": 8,
-          "item": { "@type": "Course", "name": "Ballet", "description": "Classical ballet technique building strength, alignment, and artistry from the ground up. Levels 1, 2, and 3 on Fridays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Ballet", "description": "Classical ballet technique building strength, alignment, and artistry from the ground up. Levels 1, 2, and 3 on Fridays, plus an Int/Adv morning class on Mondays and Thursdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 9,
-          "item": { "@type": "Course", "name": "Flamenco", "description": "Spanish art form combining footwork (zapateado), arm styling (braceo), and expressive upper body. Levels 1, 2, and 3 on Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Contemporary dance", "description": "Morning contemporary training for professional and semi-professional dancers, Mondays and Thursdays with Tono Ferriol. Sold as flexible class passes.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "en", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 10,
-          "item": { "@type": "Course", "name": "Indian Dance Technique", "description": "Foundational technique class drawing on classical Indian dance vocabulary — posture, isolations, mudras, and rhythm. Open level on Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Flamenco", "description": "Spanish art form combining footwork (zapateado), arm styling (braceo), and expressive upper body. Levels 1, 2, and 3 on Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 11,
-          "item": { "@type": "Course", "name": "Indian Semi-Classical (Kathak)", "description": "North Indian classical dance (Kathak-inspired) blending intricate footwork, storytelling, and expressive mime. Level 2 on Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Indian Dance Technique", "description": "Foundational technique class drawing on classical Indian dance vocabulary — posture, isolations, mudras, and rhythm. Open level on Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 12,
-          "item": { "@type": "Course", "name": "Oriental Flow", "description": "New at Shoonya — fluid contemporary Oriental dance technique for body awareness and expressive movement. Level 1 on Saturdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Indian Semi-Classical (Kathak)", "description": "North Indian classical dance (Kathak-inspired) blending intricate footwork, storytelling, and expressive mime. Level 2 on Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 13,
-          "item": { "@type": "Course", "name": "Solo Jazz", "description": "American vernacular jazz dance with syncopated footwork, personality, and swing-era authenticity. Open level on Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Oriental Flow", "description": "New at Shoonya — fluid contemporary Oriental dance technique for body awareness and expressive movement. Level 1 on Saturdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 14,
-          "item": { "@type": "Course", "name": "Tap Dance", "description": "Percussive dance using metal-tipped shoes to create rhythm. Multiple levels (L1–L6) taught Monday through Thursday by three teachers.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
+          "item": { "@type": "Course", "name": "Solo Jazz", "description": "American vernacular jazz dance with syncopated footwork, personality, and swing-era authenticity. Open level on Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 15,
-          "item": { "@type": "Course", "name": "African Congolese Dance", "description": "Energetic traditional Congolese dance forms rooted in West African rhythm and community expression. Open level on Saturdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Tap Dance", "description": "Percussive dance using metal-tipped shoes to create rhythm. Multiple levels (L1–L6) taught Monday through Thursday by three teachers.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/classical-technique/" }
         },
         {
           "@type": "ListItem", "position": 16,
-          "item": { "@type": "Course", "name": "Bhangra", "description": "Vibrant Punjabi folk dance known for its high energy, big arm movements, and celebratory spirit. Level 2 on Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "African Congolese Dance", "description": "Energetic traditional Congolese dance forms rooted in West African rhythm and community expression. Open level on Saturdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 17,
-          "item": { "@type": "Course", "name": "Bollyfolk", "description": "Bollywood-meets-folk fusion — high-energy choreography blending Bollywood moves with Indian folk dance styles. Open level and Level 2 on Tuesdays and Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Bhangra", "description": "Vibrant Punjabi folk dance known for its high energy, big arm movements, and celebratory spirit. Level 2 on Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 18,
-          "item": { "@type": "Course", "name": "Bollywood", "description": "High-energy Indian film dance combining classical vocabulary, folk styles, and contemporary flair. Levels 2 and 3 on Thursdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Bollyfolk", "description": "Bollywood-meets-folk fusion — high-energy choreography blending Bollywood moves with Indian folk dance styles. Open level and Level 2 on Tuesdays and Wednesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 19,
-          "item": { "@type": "Course", "name": "Burlesque", "description": "Empowering cabaret performance art blending theatrical presence, burlesque history, and body confidence. Levels 1 and 2 on Mondays and Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Bollywood", "description": "High-energy Indian film dance combining classical vocabulary, folk styles, and contemporary flair. Levels 2 and 3 on Thursdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 20,
-          "item": { "@type": "Course", "name": "Cissy Ball", "description": "Ballroom-inspired community dance celebrating the Cissy Ball culture — expressive, inclusive, and joyful. Open level on Mondays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Burlesque", "description": "Empowering cabaret performance art blending theatrical presence, burlesque history, and body confidence. Levels 1 and 2 on Mondays and Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 21,
-          "item": { "@type": "Course", "name": "Dance & Fit", "description": "New at Shoonya — dance-based fitness class combining movement and conditioning for all levels. Open level on Wednesday mornings. Drop-in welcome.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Cissy Ball", "description": "Ballroom-inspired community dance celebrating the Cissy Ball culture — expressive, inclusive, and joyful. Open level on Mondays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 22,
-          "item": { "@type": "Course", "name": "Pilates for Dancers", "description": "New at Shoonya — Pilates adapted for dancers to build core strength, flexibility, and body awareness. Open level on Tuesdays and Wednesday mornings. Drop-in welcome.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Dance & Fit", "description": "New at Shoonya — dance-based fitness class combining movement and conditioning for all levels. Open level on Wednesday mornings. Drop-in welcome.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 23,
-          "item": { "@type": "Course", "name": "Raqs Sharqi (Belly Dance)", "description": "Egyptian-rooted belly dance tradition combining fluid isolations, musicality, and expressive arms. Levels 1, 2, and 3 on Mondays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+          "item": { "@type": "Course", "name": "Pilates for Dancers", "description": "New at Shoonya — Pilates adapted for dancers to build core strength, flexibility, and body awareness. Open level on Tuesdays and Wednesday mornings. Drop-in welcome.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         },
         {
           "@type": "ListItem", "position": 24,
+          "item": { "@type": "Course", "name": "Raqs Sharqi (Belly Dance)", "description": "Egyptian-rooted belly dance tradition combining fluid isolations, musicality, and expressive arms. Levels 1, 2, and 3 on Mondays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
+        },
+        {
+          "@type": "ListItem", "position": 25,
           "item": { "@type": "Course", "name": "Yoga", "description": "Movement and breathwork class supporting dancers' flexibility, recovery, and mindfulness. Open level on Tuesdays.", "provider": { "@type": "Organization", "name": "Shoonya Dance Centre", "url": "https://www.shoonyadance.com" }, "courseMode": "onsite", "inLanguage": "nl", "url": "https://styles.shoonyadance.com/culture-wellness/" }
         }
       ]
@@ -663,7 +674,7 @@
       </a>
 
       <a class="strip" href="https://www.shoonyadance.com/cuban-salsa-in-gent">
-        <span class="strip-day" data-i18n="day_m">M</span>
+        <span class="strip-day is-multi" data-i18n="day_m_th">M/Th</span>
         <div class="strip-body">
           <h3 data-i18n="c_salsa_h">Cuban Salsa</h3>
           <p class="strip-meta" data-i18n="c_salsa_meta">Mon &amp; Thu · Levels 1–4 · Alex &amp; Ioanna</p>
@@ -718,10 +729,20 @@
     <div class="strip-list">
 
       <a class="strip" href="https://www.shoonyadance.com/ballet-voor-volwassenen-in-gent">
-        <span class="strip-day" data-i18n="day_f">F</span>
+        <span class="strip-day is-multi3" data-i18n="day_m_th_f">M/Th/F</span>
         <div class="strip-body">
           <h3 data-i18n="c_ballet_h">Ballet</h3>
-          <p class="strip-meta" data-i18n="c_ballet_meta">Fri · Levels 1, 2 &amp; 3 · Shirley De Muer</p>
+          <p class="strip-meta" data-i18n="c_ballet_shirley_meta">Fri · L1/L2/L3 · Shirley De Muer</p>
+          <p class="strip-meta" data-i18n="c_ballet_tono_meta">+ Ballet Int/Adv · Mon &amp; Thu mornings · Tono Ferriol</p>
+        </div>
+        <span class="strip-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a class="strip" href="https://www.shoonyadance.com/contemporary-dance-gent">
+        <span class="strip-day is-multi" data-i18n="day_m_th">M/Th</span>
+        <div class="strip-body">
+          <h3 data-i18n="c_contemporary_h">Contemporary dance</h3>
+          <p class="strip-meta" data-i18n="c_contemporary_meta">Mon &amp; Thu mornings · Int/Adv · Tono Ferriol</p>
         </div>
         <span class="strip-arrow" aria-hidden="true">→</span>
       </a>
@@ -772,7 +793,7 @@
       </a>
 
       <a class="strip" href="https://www.shoonyadance.com/tapdans-lessen-in-gent">
-        <span class="strip-day" data-i18n="day_m">M</span>
+        <span class="strip-day is-multi3" data-i18n="day_m_w_th">M/W/Th</span>
         <div class="strip-body">
           <h3 data-i18n="c_tap_h">Tap Dance</h3>
           <p class="strip-meta" data-i18n="c_tap_meta">Mon, Wed &amp; Thu · 6 levels · Tapdance Promotion</p>
@@ -818,7 +839,7 @@
       </a>
 
       <a class="strip" href="https://www.shoonyadance.com/bollyfolk-danslessen-in-gent">
-        <span class="strip-day" data-i18n="day_t">T</span>
+        <span class="strip-day is-multi" data-i18n="day_t_w">T/W</span>
         <div class="strip-body">
           <h3 data-i18n="c_bollyfolk_h">Bollyfolk</h3>
           <p class="strip-meta" data-i18n="c_bollyfolk_meta">Tue L2 · Wed Open · Swapnil</p>
@@ -836,7 +857,7 @@
       </a>
 
       <a class="strip" href="https://www.shoonyadance.com/burlesque-lessen-in-gent">
-        <span class="strip-day" data-i18n="day_m">M</span>
+        <span class="strip-day is-multi" data-i18n="day_m_t">M/T</span>
         <div class="strip-body">
           <h3 data-i18n="c_burlesque_h">Burlesque</h3>
           <p class="strip-meta" data-i18n="c_burlesque_meta">Mon (L1) · Tue (L2) · Zoe Bizoe</p>
@@ -863,7 +884,7 @@
       </a>
 
       <a class="strip" href="https://www.shoonyadance.com/pilates-voor-dansers-gent">
-        <span class="strip-day" data-i18n="day_t">T</span>
+        <span class="strip-day is-multi" data-i18n="day_t_w">T/W</span>
         <div class="strip-body">
           <h3 data-i18n="c_pilates_h">Pilates for Dancers <span class="badge badge-new" data-i18n="badge_new">New</span></h3>
           <p class="strip-meta" data-i18n="c_pilates_meta">Tue 17:20 · Wed 10:45 · Open · Lenka Badriyah</p>
@@ -881,7 +902,7 @@
       </a>
 
       <a class="strip" href="https://www.shoonyadance.com/yoga-lessen-in-gent">
-        <span class="strip-day" data-i18n="day_t">T</span>
+        <span class="strip-day is-multi" data-i18n="day_t_w">T/W</span>
         <div class="strip-body">
           <h3 data-i18n="c_yoga_h">Yoga</h3>
           <p class="strip-meta" data-i18n="c_yoga_meta">Tue & Wed · Open level · Swapnil</p>
@@ -952,6 +973,7 @@ const translations = {
     badge_new: "New", badge_mini: "Miniseries", badge_starter: "+ Starter Series",
 
     day_m: "M", day_t: "T", day_w: "W", day_th: "Th", day_f: "F", day_sa: "Sa",
+    day_m_th: "M/Th", day_m_t: "M/T", day_t_w: "T/W", day_m_w_th: "M/W/Th", day_m_th_f: "M/Th/F",
 
     c_tango_h: "Argentine Tango",        c_tango_meta: "Thu · Levels 1 & 2 · Gisela & Sergio · 16+",
     c_bachata_h: "Bachata",              c_bachata_meta: "Tue · Levels 1–3 · Alex & Lenka",
@@ -961,7 +983,10 @@ const translations = {
     c_lindy_h: "Lindy Hop",              c_lindy_meta: "Wed · Levels 1 & 2 · Upside Down",
     c_rueda_h: "Rueda de Casino",        c_rueda_meta: "Thu · Levels 1 & 2 · Alex & Ioanna",
 
-    c_ballet_h: "Ballet",                c_ballet_meta: "Fri · Levels 1, 2 & 3 · Shirley De Muer",
+    c_ballet_h: "Ballet",
+    c_ballet_shirley_meta: "Fri · L1/L2/L3 · Shirley De Muer",
+    c_ballet_tono_meta: "+ Ballet Int/Adv · Mon & Thu mornings · Tono Ferriol",
+    c_contemporary_h: "Contemporary dance", c_contemporary_meta: "Mon & Thu mornings · Int/Adv · Tono Ferriol",
     c_flamenco_h: "Flamenco",            c_flamenco_meta: "Tue · All levels · La Liz",
     c_indian_h: "Indian Dance Technique",c_indian_meta: "Tue · Open level · Swapnil",
     c_kathak_h: "Indian Semi-classical (Kathak)", c_kathak_meta: "Wed · Level 2 · Swapnil",
@@ -983,7 +1008,9 @@ const translations = {
     footer_h: "Not sure where to start?",
     footer_p: "Come to the free trial week (" + (_d.en ? _d.en.trial_week_short : "Sep 14–19, 2026") + ") and try any class — no registration, no commitment. The teachers will help you find your level.",
     footer_btn: "Start here →",
-    footer_btn2: "See the full school year"
+    footer_btn2: "See the full school year",
+    footer_nav_year: "school year",
+    footer_nav_new: "new to shoonya"
   },
   nl: {
     skip_link: "Naar inhoud",
@@ -1015,6 +1042,7 @@ const translations = {
     badge_new: "Nieuw", badge_mini: "Minireeks", badge_starter: "+ Starter Series",
 
     day_m: "Ma", day_t: "Di", day_w: "Wo", day_th: "Do", day_f: "Vr", day_sa: "Za",
+    day_m_th: "Ma/Do", day_m_t: "Ma/Di", day_t_w: "Di/Wo", day_m_w_th: "Ma/Wo/Do", day_m_th_f: "Ma/Do/Vr",
 
     c_tango_h: "Argentijnse Tango",       c_tango_meta: "Do · Niveaus 1 & 2 · Gisela & Sergio · 16+",
     c_bachata_h: "Bachata",               c_bachata_meta: "Di · Niveaus 1–3 · Alex & Lenka",
@@ -1024,7 +1052,10 @@ const translations = {
     c_lindy_h: "Lindy Hop",               c_lindy_meta: "Wo · Niveaus 1 & 2 · Upside Down",
     c_rueda_h: "Rueda de Casino",         c_rueda_meta: "Do · Niveaus 1 & 2 · Alex & Ioanna",
 
-    c_ballet_h: "Ballet",                 c_ballet_meta: "Vr · Niveaus 1, 2 & 3 · Shirley De Muer",
+    c_ballet_h: "Ballet",
+    c_ballet_shirley_meta: "Vr · N1/N2/N3 · Shirley De Muer",
+    c_ballet_tono_meta: "+ Ballet Int/Gev · ma- & do-ochtend · Tono Ferriol",
+    c_contemporary_h: "Hedendaagse dans",  c_contemporary_meta: "Ma- & do-ochtend · Int/Gev · Tono Ferriol",
     c_flamenco_h: "Flamenco",             c_flamenco_meta: "Di · Alle niveaus · La Liz",
     c_indian_h: "Indiase Danstechniek",   c_indian_meta: "Di · Open niveau · Swapnil",
     c_kathak_h: "Indiaas Semi-klassiek (Kathak)", c_kathak_meta: "Wo · Niveau 2 · Swapnil",
@@ -1046,7 +1077,9 @@ const translations = {
     footer_h: "Weet je niet waar te beginnen?",
     footer_p: "Kom naar de gratis proefweek (" + (_d.nl ? _d.nl.trial_week_short : "14–19 sep 2026") + ") en probeer elke les — geen inschrijving, geen verplichting. De leraars helpen je je niveau te vinden.",
     footer_btn: "Begin hier →",
-    footer_btn2: "Bekijk het volledige schooljaar"
+    footer_btn2: "Bekijk het volledige schooljaar",
+    footer_nav_year: "schooljaar",
+    footer_nav_new: "nieuw bij shoonya"
   }
 };
 
