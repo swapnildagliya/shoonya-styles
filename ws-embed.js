@@ -1,5 +1,11 @@
 // ws-embed.js — Shoonya style page embed
-// Served from: https://classes.shoonyadance.com/ws-embed.js
+// Served from: https://schooljaar.shoonyadance.com/ws-embed.js  ← the LIVE host.
+//   ⚠️ This line used to say classes.shoonyadance.com. It was wrong, and it cost a session:
+//   all 24 Squarespace style pages load the schooljaar copy. `classes` and `styles` serve
+//   older copies of this file that NOTHING loads. The classes URL is aspirational — left over
+//   from a subdomain rename that was prepared and REVERTED (truth/decisions.md §599: GitHub
+//   Pages 404s the old domain instead of redirecting, so there is no zero-downtime path with
+//   one repo). Deploy to `shoonya-website`; the other two repos are not load-bearing.
 // v6 · 2026-06-19 — inject Course/CourseInstance JSON-LD per style page from the
 //                   feed (style/level/day/time/dates/teacher/studio), so weekly
 //                   classes are machine-readable for search + answer engines.
@@ -72,6 +78,16 @@
     return null;
   }
 
+  // Style names in the feed do not always match the SLUGS keys exactly. The sheet carries
+  // "Raqs Sharqi (bellydance)" while SLUGS says "Raqs Sharqi", and an exact lowercase compare
+  // silently produced NO add-to-calendar buttons on that page — for months, invisibly, because
+  // the page otherwise looks fine. Normalise by dropping any trailing parenthetical and
+  // collapsing whitespace before comparing. Fixes the class of bug, not just this one name.
+  function styleKey(s) {
+    return String(s || '').toLowerCase().replace(/\s*\([^)]*\)\s*$/, '').replace(/\s+/g, ' ').trim();
+  }
+  function sameStyle(a, b) { return styleKey(a) === styleKey(b); }
+
   // ONE shared in-flight promise for the whole page — both the calendar buttons and the
   // Levels block read it. Never add a second fetch of this URL: two concurrent requests to
   // the same Apps Script /exec get serialised per user and one of them comes back 404.
@@ -85,18 +101,63 @@
   function fetchSchedule() {
     if (_feedPromise) return _feedPromise;
     var url = SCHED_FEED + '?action=publicSchedule&semester=' + encodeURIComponent(SCHED_SEMESTER);
+    // 4 attempts with widening backoff (0.6s / 1.2s / 2.4s). The endpoint 404s often enough
+    // that three was not always sufficient.
+    // Per-attempt timeout. Measured 2026-08-12: a SUCCESSFUL response takes 3–9s, but a
+    // failing one sat for ~14s before returning 404. Without a cap, one bad attempt costs
+    // more than the whole retry chain. 12s is above the slowest observed success and below
+    // the observed failure, so it cuts dead requests without killing slow-but-good ones.
     var attempt = function (n) {
-      return fetch(url)
-        .then(function (r) { return r.ok ? r.json() : null; })
+      var ctl = (typeof AbortController === 'function') ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctl) try { ctl.abort(); } catch (e) {} }, 12000);
+      return fetch(url, ctl ? { signal: ctl.signal } : undefined)
+        .then(function (r) { clearTimeout(timer); return r.ok ? r.json() : null; })
         .then(function (j) { return (j && j.ok && Array.isArray(j.slots)) ? j.slots : null; })
-        .catch(function () { return null; })
+        .catch(function () { clearTimeout(timer); return null; })
         .then(function (slots) {
-          if (slots || n >= 3) return slots;
-          return new Promise(function (res) { setTimeout(res, 600); }).then(function () { return attempt(n + 1); });
+          if (slots || n >= 4) return slots;
+          var wait = 600 * Math.pow(2, n - 1);
+          return new Promise(function (res) { setTimeout(res, wait); }).then(function () { return attempt(n + 1); });
         });
     };
-    _feedPromise = attempt(1);
+
+    // Cache, for two distinct reasons:
+    //  1. SPEED — the Apps Script round-trip is ~4s on a good run and longer when it retries,
+    //     which a visitor reads as "there is nothing here". A fresh cache paints instantly,
+    //     including when moving between style pages.
+    //  2. RESILIENCE — when every retry fails (it happens), a STALE cache is served rather
+    //     than nothing. Slightly old class times beat a blank section by a mile. Only a
+    //     first-ever visitor during an outage now sees no block at all.
+    // The schedule changes a few times a semester, so 30 min of staleness is harmless.
+    var fresh = _readFeedCache(false);
+    if (fresh) { _feedPromise = Promise.resolve(fresh); return _feedPromise; }
+
+    _feedPromise = attempt(1).then(function (slots) {
+      if (slots) { _writeFeedCache(slots); return slots; }
+      var stale = _readFeedCache(true);          // any age — better than an empty section
+      if (stale) { try { console.warn('[ws-levels] feed unreachable — serving cached schedule'); } catch (e) {} }
+      return stale;
+    });
     return _feedPromise;
+  }
+
+  var FEED_CACHE_KEY = 'ws_sched_v1_' + SCHED_SEMESTER;
+  var FEED_CACHE_TTL = 30 * 60 * 1000;
+
+  // allowStale=true ignores the TTL — used only as the last resort when the feed is down.
+  function _readFeedCache(allowStale) {
+    try {
+      var raw = localStorage.getItem(FEED_CACHE_KEY);
+      if (!raw) return null;
+      var o = JSON.parse(raw);
+      if (!o || !Array.isArray(o.slots) || !o.slots.length || !o.t) return null;
+      if (!allowStale && Date.now() - o.t > FEED_CACHE_TTL) return null;   // keep it: may serve stale later
+      return o.slots;
+    } catch (e) { return null; }   // private mode / quota / bad JSON → just fetch
+  }
+
+  function _writeFeedCache(slots) {
+    try { localStorage.setItem(FEED_CACHE_KEY, JSON.stringify({ t: Date.now(), slots: slots })); } catch (e) {}
   }
 
   // Accept ":" (feed/EN), "." and "u"/"h" (NL/Weglot renders "18.30 uur" / "18u30").
@@ -632,12 +693,12 @@
       var path = (window.location.pathname || '').replace(/\/$/, '').toLowerCase();
       var styleName = styleForPath(path);
       if (!styleName) return;
-      if (!document.querySelector('details[class*="-date-list"]')) return; // not in DOM yet
+      if (!document.querySelector('details[class*="date-list"]')) return; // not in DOM yet
       fetchSchedule().then(function (slots) {
         if (_calDone || !slots) return;
-        var anchors = [].slice.call(document.querySelectorAll('details[class*="-date-list"]'));
+        var anchors = [].slice.call(document.querySelectorAll('details[class*="date-list"]'));
         if (!anchors.length) return;
-        var mine = slots.filter(function (s) { return (s.style || '').toLowerCase() === styleName.toLowerCase(); });
+        var mine = slots.filter(function (s) { return sameStyle(s.style, styleName); });
         if (!mine.length) return;
         mine.sort(function (a, b) { return (DAY_ORDER[a.day] || 9) - (DAY_ORDER[b.day] || 9) || hhmm(a.start).localeCompare(hhmm(b.start)); });
         injectStyles();
@@ -697,7 +758,7 @@
       if (!styleName) return;
       fetchSchedule().then(function (slots) {
         if (_courseDone || document.getElementById('wsep-course-jsonld') || !slots) return;
-        var mine = slots.filter(function (s) { return (s.style || '').toLowerCase() === styleName.toLowerCase(); });
+        var mine = slots.filter(function (s) { return sameStyle(s.style, styleName); });
         if (!mine.length) return;
         mine.sort(function (a, b) { return (DAY_ORDER[a.day] || 9) - (DAY_ORDER[b.day] || 9) || hhmm(a.start).localeCompare(hhmm(b.start)); });
         var base = (location.origin + location.pathname).replace(/\/$/, '');
@@ -792,17 +853,25 @@
     setTimeout(injectCalendarButtons, 600);
     setTimeout(injectCalendarButtons, 1600);
     setTimeout(injectCalendarButtons, 3200);
-    // If the div wasn't in the DOM yet, poll every 100ms for up to 3 seconds
-    if (!document.getElementById('ws-prac-root')) {
+    // If a root div wasn't in the DOM yet, poll every 100ms until it appears.
+    //
+    // ⚠️ #ws-levels-root MUST be polled for, exactly like #ws-prac-root. Squarespace injects
+    // code blocks asynchronously, so on a real page the div frequently does not exist when
+    // init() runs. injectLevelsBlock() bails on its FIRST line when the root is missing —
+    // and that is the one exit path that logs no warning, so the failure looks like "the
+    // feed broke" when it is really "the div wasn't there yet". This cost a blank Kizomba
+    // block on 2026-08-12: it passed every local test because a static fixture always has
+    // the div before the script runs, which is the one condition Squarespace never meets.
+    var _pracSeen  = !!document.getElementById('ws-prac-root');
+    var _levelSeen = !!document.getElementById('ws-levels-root');
+    if (!_pracSeen || !_levelSeen) {
       var attempts = 0;
       var poll = setInterval(function () {
         attempts++;
-        if (document.getElementById('ws-prac-root')) {
-          clearInterval(poll);
-          render();
-        } else if (attempts >= 30) {
-          clearInterval(poll); // give up after 3s
-        }
+        if (!_pracSeen && document.getElementById('ws-prac-root')) { _pracSeen = true; render(); }
+        // injectLevelsBlock() self-guards via data-ws-done, so a repeat call is harmless.
+        if (!_levelSeen && document.getElementById('ws-levels-root')) { _levelSeen = true; injectLevelsBlock(); }
+        if ((_pracSeen && _levelSeen) || attempts >= 100) clearInterval(poll); // give up after 10s
       }, 100);
     }
   }
@@ -845,7 +914,12 @@
   function wsStyleFromSlots(styleName, allSlots) {
     var ws = (WS_LEVELS.styleData && WS_LEVELS.styleData[styleName]) || {};
     var names = [styleName].concat(ws.mergeStyles || []);
-    var mine = allSlots.filter(function (s) { return names.indexOf(s.style) >= 0; });
+    // Tolerant compare, same reason as injectCalendarButtons: the feed's "Raqs Sharqi
+    // (bellydance)" does not equal the SLUGS key "Raqs Sharqi".
+    var mine = allSlots.filter(function (s) {
+      for (var i = 0; i < names.length; i++) if (sameStyle(s.style, names[i])) return true;
+      return false;
+    });
 
     // A teacher moved to their own page must not appear here too.
     if (ws.excludeTeachers && ws.excludeTeachers.length) {
@@ -853,10 +927,18 @@
     }
     if (!mine.length) return null;
 
-    var byLevel = {}, order = [], descByLevel = {};
+    // GROUP by levelName ("Level 1"), but DISPLAY the full label ("Level 1 — Flamenco &
+    // Sevillanas"). The feed splits "Level 1 — Foundation" into levelName + displayLabel; an
+    // earlier version of this adapter keyed and displayed on levelName only, which silently
+    // dropped the label — the block showed a bare "Level 1" while the pasted block and the
+    // add-to-calendar button both carried the full name. Grouping still uses the short key so
+    // alternate timings for one level merge correctly.
+    // descByLevel stays keyed on the SHORT name; the renderer falls back to
+    // descs['Level ' + n], so descriptions still resolve against the long display label.
+    var byLevel = {}, order = [], descByLevel = {}, displayByKey = {};
     mine.forEach(function (s) {
       var key = s.levelName || s.level || 'Open Level';
-      if (!byLevel[key]) { byLevel[key] = []; order.push(key); }
+      if (!byLevel[key]) { byLevel[key] = []; order.push(key); displayByKey[key] = s.level || key; }
       if (s.levelDescription && !descByLevel[key]) descByLevel[key] = s.levelDescription;
       byLevel[key].push({
         day: WS_DAY_LONG[s.day] || s.day,
@@ -875,7 +957,8 @@
       // Multiple weekly slots for ONE level are alternate timings, not extra sessions:
       // sessions = MAX across slots, never the sum. (CLAUDE.md, multi-slot rule.)
       var counts = sl.map(function (x) { return (x.dates || []).length; });
-      return { level: key, sessionCount: Math.max.apply(null, counts.concat([0])), slots: sl };
+      return { level: displayByKey[key] || key, _realLevel: key,
+               sessionCount: Math.max.apply(null, counts.concat([0])), slots: sl };
     });
 
     return { name: styleName, meta: { descByLevel: descByLevel }, levels: levels };
@@ -1527,9 +1610,14 @@ function wsLevelsHtml(style, descsByLevel, wsData) {
     const cards = [];
     levels.forEach((lv, i) => {
       const levelDesc = _descs[lv.level] || _descs['Level ' + (i + 1)] || '';
+      // This path renders ONE CARD PER SLOT, so a level taught on two days (Yoga Tue+Thu,
+      // Pilates Tue+Wed) produced the same description twice on one page. The description
+      // belongs to the level, not the slot — emit it on the first card only (D-024: each
+      // fact exactly once per surface).
+      let _descUsed = false;
       (lv.slots || []).forEach(s => {
         const isDropin = _dropinDays.includes(s.day);
-        cards.push(wsPerLevelCard(lv, i, meta, p, false, levelDesc, {
+        cards.push(wsPerLevelCard(lv, i, meta, p, false, _descUsed ? '' : levelDesc, {
           slotOverride: s,
           // Pass/merged pages carry more than one style, so the card title leads
           // with the level label; drop-in pages keep the plain "Monday morning".
@@ -1538,6 +1626,7 @@ function wsLevelsHtml(style, descsByLevel, wsData) {
           semesterOnly: (!_passCfg && !_multiDropin && !isDropin),
           passOnly: !!_passCfg
         }));
+        _descUsed = true;
       });
     });
     cardsHtml = cards.join('\n');
@@ -1557,7 +1646,11 @@ function wsLevelsHtml(style, descsByLevel, wsData) {
   } else if (layout === 'per-level') {
     cardsHtml = levels.map((lv, i) => {
       const isStarter = /starter/i.test(lv.level || '');
-      const levelDesc = _descs[lv.level] || _descs['Level ' + (i + 1)] || '';
+      // A starter series is NOT "level i+1". The positional fallback handed it whatever level
+      // happened to sit at that index, so the identical description rendered twice on one page
+      // — observed on Indian Semi-Classical 2026-08-12, where the Level 2 text repeated verbatim
+      // on the 4-Week Starter card. A starter card gets a description only if one is keyed to it.
+      const levelDesc = _descs[lv.level] || (isStarter ? '' : (_descs['Level ' + (i + 1)] || ''));
       return wsPerLevelCard(lv, i, meta, p, isStarter, levelDesc);
     }).join('\n');
   } else {
